@@ -63,6 +63,8 @@ class Gui_app:
     def __init__(self, page):
 
         self.page = page
+        
+        self.num_clean_widgets = 0
 
         self.player_1 = Player()
         self.player_2 = Player()
@@ -415,6 +417,13 @@ class Gui_app:
                                     icon_size=30,
                                     on_click=self.close_dialog
                                     )
+        
+        self.button_clean = IconButton(
+                                    icon="DELETE_SWEEP_ROUNDED",
+                                    icon_color="#da132c",
+                                    icon_size=30,
+                                    on_click=self.clean_widgets_info
+                                    )
 
         self.list_containers = [
             [self.container_1], [self.container_2], [self.container_3],
@@ -422,9 +431,32 @@ class Gui_app:
             [self.container_7], [self.container_2], [self.container_9]
         ]
 
+    def clean_widgets_info(self, e):
+        print("-- en clean")
+        if self.num_clean_widgets == 1:
+            self.dialog_names_p1.content = []
+            self.dialog_names_p1.actions = []
+            print(self.num_clean_widgets)
+            self.input_name_p1.value = ""
+            self.check_x_p1.disabled = False
+            self.check_x_p1.value = False
+            self.check_o_p1.disabled = False
+            self.check_o_p1.value = False
+            self.page.update()
+        elif self.num_clean_widgets == 2:
+            print(self.num_clean_widgets)
+            self.check_x_p2.disabled = False
+            self.check_x_p2.value = False
+            self.check_o_p2.disabled = False
+            self.check_o_p2.value = False
+            self.page.update()
+
     def open_dialog(self, e):
         if e == '1':
+
             self.edit_name = 1
+            self.num_clean_widgets = 1
+
             self.dialog_names_p1.content = Container(
                                                 bgcolor="transparent",
                                                 height=50,
@@ -439,6 +471,8 @@ class Gui_app:
                                             controls=[
                                                     self.check_x_p1, 
                                                     self.check_o_p1,
+                                                    Column(width=25),
+                                                    self.button_clean,
                                                     self.button_check,
                                             ],
                                             alignment=flet.MainAxisAlignment.SPACE_AROUND
@@ -451,6 +485,8 @@ class Gui_app:
         elif e == '2':
 
             self.edit_name = 2
+            self.num_clean_widgets = 2
+
             self.dialog_names_p2.content = Container(
                                                 bgcolor="transparent",
                                                 height=50,
@@ -465,6 +501,8 @@ class Gui_app:
                                             controls=[
                                                     self.check_x_p2, 
                                                     self.check_o_p2,
+                                                    Column(width=25),
+                                                    self.button_clean,
                                                     self.button_check,
                                             ],
                                             alignment=flet.MainAxisAlignment.SPACE_AROUND
@@ -508,18 +546,16 @@ class Gui_app:
                 if self.check_x_p1.value and not self.check_o_p1.value:
                     self.check_x_p2.disabled = True
                     self.check_o_p2.value = True
-                    self.check_o_p2.disabled = True
                     self.player_1.set_figure("x")
                 elif self.check_o_p1.value and not self.check_x_p1.value:
                     self.check_o_p2.disabled = True
                     self.check_x_p2.value = True
-                    self.check_x_p2.disabled = True
                     self.player_1.set_figure("o")
                 
                 self.player_1.get_info_player("PLAYER 1")
 
                 self.dialog_names_p1.content = []
-                self.dialog_names_p1.actions = ""
+                self.dialog_names_p1.actions = []
                 self.page.update()
 
             elif not self.check_o_p1.value and not self.check_x_p1.value:
@@ -568,18 +604,16 @@ class Gui_app:
                 if self.check_x_p2.value and not self.check_o_p2.value:
                     self.check_x_p1.disabled = True
                     self.check_o_p1.value = True
-                    self.check_o_p1.disabled = True
                     self.player_2.set_figure("x")
                 elif self.check_o_p2.value and not self.check_x_p2.value:
                     self.check_o_p1.disabled = True
                     self.check_x_p1.value = True
-                    self.check_x_p1.disabled = True
                     self.player_2.set_figure("o")
 
                 self.player_2.get_info_player("PLAYER 2")
                 
                 self.dialog_names_p2.content = []
-                self.dialog_names_p2.actions = ()
+                self.dialog_names_p2.actions = []
                 self.page.update()
 
             elif not self.check_x_p2.value and not self.check_o_p2.value:
