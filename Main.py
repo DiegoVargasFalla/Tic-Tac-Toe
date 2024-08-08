@@ -95,22 +95,36 @@ class Gui_app:
         
         self.games_won_P1 = Text(
             "0",
-            weight=FontWeight.W_600
+            weight=FontWeight.W_500
         )
 
         self.games_won_P2 = Text(
             "0",
-            weight=FontWeight.W_600
+            weight=FontWeight.W_500
+        )
+
+        self.figure_P1 = Text(
+            "",
+            weight=FontWeight.W_700,
+            size=20
+        )
+
+        self.figure_P2 = Text(
+            "",
+            weight=FontWeight.W_700,
+            size=20
         )
 
         self.row_player_1 = Row(
             controls=[
+                self.figure_P1,
                 self.text_player_1,
                 self.games_won_P1,
                 ],alignment=flet.MainAxisAlignment.SPACE_AROUND
             )
         self.row_player_2 = Row(
             controls=[
+                self.figure_P2,
                 self.text_player_2,
                 self.games_won_P2
                 ],alignment=flet.MainAxisAlignment.SPACE_AROUND
@@ -362,6 +376,7 @@ class Gui_app:
             content=self.column_all,
             expand=True,
             ink=True,
+            on_click=lambda e: print("- seleccionado"),
             height=self.page.height,
             # width=self.page.width,
             margin=-10,
@@ -403,6 +418,7 @@ class Gui_app:
             modal=True,
             bgcolor="#9bb9a8",
             title=Text("Welcome", weight=FontWeight.W_700),
+            actions=[]
         )
 
         self.dialog_names_p2 = AlertDialog(
@@ -434,26 +450,39 @@ class Gui_app:
     def clean_widgets_info(self, e):
         print("-- en clean")
         if self.num_clean_widgets == 1:
-            self.dialog_names_p1.content = []
-            self.dialog_names_p1.actions = []
             print(self.num_clean_widgets)
+            self.figure_P1.value = ""
+            self.figure_P2.value = ""
             self.input_name_p1.value = ""
             self.check_x_p1.disabled = False
             self.check_x_p1.value = False
             self.check_o_p1.disabled = False
             self.check_o_p1.value = False
-            self.page.update()
-        elif self.num_clean_widgets == 2:
-            print(self.num_clean_widgets)
+
             self.check_x_p2.disabled = False
             self.check_x_p2.value = False
             self.check_o_p2.disabled = False
             self.check_o_p2.value = False
             self.page.update()
+        elif self.num_clean_widgets == 2:
+            print(self.num_clean_widgets)
+            self.figure_P2.value = ""
+            self.figure_P1.value = ""
+            self.input_name_p1.value = ""
+            self.check_x_p2.disabled = False
+            self.check_x_p2.value = False
+            self.check_o_p2.disabled = False
+            self.check_o_p2.value = False
+
+            self.check_x_p1.disabled = False
+            self.check_x_p1.value = False
+            self.check_o_p1.disabled = False
+            self.check_o_p1.value = False
+            self.page.update()
 
     def open_dialog(self, e):
         if e == '1':
-
+            # print(f"num action -> {len(self.dialog_names_p1.actions)}")
             self.edit_name = 1
             self.num_clean_widgets = 1
 
@@ -515,9 +544,6 @@ class Gui_app:
     def close_dialog(self, e):
         if self.edit_name == 1 and self.input_name_p1.value:
 
-                
-            self.page.update()
-
             if self.check_x_p1.value and self.check_o_p1.value:
 
                 for l in range(1, 3):
@@ -546,19 +572,26 @@ class Gui_app:
                 if self.check_x_p1.value and not self.check_o_p1.value:
                     self.check_x_p2.disabled = True
                     self.check_o_p2.value = True
-                    self.player_1.set_figure("x")
+                    self.player_1.set_figure("X")
+                    self.figure_P1.value = self.player_1.get_figure()
                 elif self.check_o_p1.value and not self.check_x_p1.value:
                     self.check_o_p2.disabled = True
                     self.check_x_p2.value = True
-                    self.player_1.set_figure("o")
+                    self.player_1.set_figure("O")
+                    self.figure_P1.value = self.player_1.get_figure()
                 
                 self.player_1.get_info_player("PLAYER 1")
 
-                self.dialog_names_p1.content = []
-                self.dialog_names_p1.actions = []
+                self.dialog_names_p1 = AlertDialog(
+                                                modal=True,
+                                                bgcolor="#9bb9a8",
+                                                title=Text("Welcome", weight=FontWeight.W_700),
+                                                actions=[]
+                                                )
                 self.page.update()
 
             elif not self.check_o_p1.value and not self.check_x_p1.value:
+                print(self.dialog_names_p1.actions)
 
                 for j in range(1, 5):
 
@@ -587,7 +620,7 @@ class Gui_app:
                     self.check_o_p2.value = True
                     self.check_x_p2.value = True
                     self.page.update()
-                    time.sleep(0.22)
+                    time.sleep(0.2)
 
                 self.check_o_p2.value = False
                 self.check_x_p2.value = False
@@ -604,16 +637,21 @@ class Gui_app:
                 if self.check_x_p2.value and not self.check_o_p2.value:
                     self.check_x_p1.disabled = True
                     self.check_o_p1.value = True
-                    self.player_2.set_figure("x")
+                    self.player_2.set_figure("X")
+                    self.figure_P2.value = self.player_2.get_figure()
                 elif self.check_o_p2.value and not self.check_x_p2.value:
                     self.check_o_p1.disabled = True
                     self.check_x_p1.value = True
-                    self.player_2.set_figure("o")
-
+                    self.player_2.set_figure("O")
+                    self.figure_P2.value = self.player_2.get_figure()
                 self.player_2.get_info_player("PLAYER 2")
                 
-                self.dialog_names_p2.content = []
-                self.dialog_names_p2.actions = []
+                self.dialog_names_p2 = AlertDialog(
+                                                modal=True,
+                                                bgcolor="#9bb9a8",
+                                                title=Text("Welcome", weight=FontWeight.W_700),
+                                                actions=[]
+                                                )
                 self.page.update()
 
             elif not self.check_x_p2.value and not self.check_o_p2.value:
