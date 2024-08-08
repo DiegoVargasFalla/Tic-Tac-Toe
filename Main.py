@@ -27,7 +27,36 @@ class Player:
         self.name = ""
         self.shift = False
         self.game_won = 0
-        pass
+        self.figure = ""
+        
+    def get_shift(self):
+        return self.shift
+    
+    def set_shitf(self, shift):
+        self.shift = shift
+
+    def get_name(self):
+        return self.name
+    
+    def set_name(self, name):
+        self.name = name
+
+    def get_game_won(self):
+        return self.game_won
+    
+    def set_game_won(self, num):
+        self.game_won = num
+
+    def get_figure(self):
+        return self.figure
+    
+    def set_figure(self, figure):
+        self.figure = figure
+
+    def get_info_player(self, jugador):
+        print(f"- {jugador}\n   - Nombre: {self.name}\n   - turno: {self.shift}\n   - juegos ganados: {self.game_won}\n   - figura: {self.figure}")
+
+    
 
 class Gui_app:
 
@@ -35,14 +64,17 @@ class Gui_app:
 
         self.page = page
 
+        self.player_1 = Player()
+        self.player_2 = Player()
+
         self.page.window.height = 520
         self.page.window.width = 680
 
-        self.page.window_max_width = 680
-        self.page.window_max_height = 520
+        self.page.window.max_width = 680
+        self.page.window.max_height = 520
 
-        self.page.window_min_width = 680
-        self.page.window_min_height = 520
+        self.page.window.min_width = 680
+        self.page.window.min_height = 520
 
         self.page.window.center()
         # self.page.update()
@@ -327,6 +359,7 @@ class Gui_app:
             image_fit="FILL",
             content=self.column_all,
             expand=True,
+            ink=True,
             height=self.page.height,
             # width=self.page.width,
             margin=-10,
@@ -391,7 +424,6 @@ class Gui_app:
 
     def open_dialog(self, e):
         if e == '1':
-            print("-- primer contenedor", e)
             self.edit_name = 1
             self.dialog_names_p1.content = Container(
                                                 bgcolor="transparent",
@@ -415,9 +447,9 @@ class Gui_app:
             self.page.update()
             self.dialog_names_p1.open = True
             self.page.update()
-            print("-- saliendo de pprimer contenedor")
+
         elif e == '2':
-            print("-- segundo contenedor", e)
+
             self.edit_name = 2
             self.dialog_names_p2.content = Container(
                                                 bgcolor="transparent",
@@ -444,61 +476,74 @@ class Gui_app:
 
     def close_dialog(self, e):
         if self.edit_name == 1 and self.input_name_p1.value:
+
+                
+            self.page.update()
+
+            if self.check_x_p1.value and self.check_o_p1.value:
+
+                for l in range(1, 3):
+
+                    self.check_o_p1.value = False
+                    self.check_x_p1.value = False
+                    self.page.update()
+                    time.sleep(0.2)
+                    self.check_o_p1.value = True
+                    self.check_x_p1.value = True
+                    self.page.update()
+                    time.sleep(0.22)
+                
+                self.check_o_p1.value = False
+                self.check_x_p1.value = False
                 self.page.update()
-                print("-- edit = 1 y tiene texto el input")
 
-                if self.check_x_p1.value and self.check_o_p1.value:
-                    print("-- los dos check True")
-                    for l in range(2):
+            elif self.check_x_p1.value or self.check_o_p1.value:
 
-                        self.check_o_p1.value = False
-                        self.check_x_p1.value = False
-                        self.page.update()
-                        time.sleep(0.2)
-                        self.check_o_p1.value = True
-                        self.check_x_p1.value = True
-                        self.page.update()
-                        time.sleep(0.22)
-                    
+                self.text_player_1.value = self.input_name_p1.value.capitalize()
+                self.dialog_names_p1.open = False
+
+                self.player_1.set_name(self.input_name_p1.value)
+                self.player_1.set_shitf(True)
+
+                if self.check_x_p1.value and not self.check_o_p1.value:
+                    self.check_x_p2.disabled = True
+                    self.check_o_p2.value = True
+                    self.check_o_p2.disabled = True
+                    self.player_1.set_figure("x")
+                elif self.check_o_p1.value and not self.check_x_p1.value:
+                    self.check_o_p2.disabled = True
+                    self.check_x_p2.value = True
+                    self.check_x_p2.disabled = True
+                    self.player_1.set_figure("o")
+                
+                self.player_1.get_info_player("PLAYER 1")
+
+                self.dialog_names_p1.content = []
+                self.dialog_names_p1.actions = ""
+                self.page.update()
+
+            elif not self.check_o_p1.value and not self.check_x_p1.value:
+
+                for j in range(1, 5):
+
+                    self.check_o_p1.value = True
+                    self.check_x_p1.value = True
+                    self.page.update()
+                    time.sleep(0.1)
                     self.check_o_p1.value = False
                     self.check_x_p1.value = False
                     self.page.update()
+                    time.sleep(0.1)
 
-                elif self.check_x_p1.value or self.check_o_p1.value:
-
-                    print(self.check_o_p1.value, self.check_x_p1)
-                    print(f"-- {self.edit_name, self.input_name_p1.value}")
-                    self.text_player_1.value = self.input_name_p1.value.capitalize()
-                    self.dialog_names_p1.open = False
-                    self.dialog_names_p1.content = []
-                    self.dialog_names_p1.actions = []
-                    self.page.update()
-
-                elif not self.check_o_p1.value and not self.check_x_p1.value:
-                    print("ningun check es True")
-
-                    for j in range(1, 5):
-
-                        self.check_o_p1.value = True
-                        self.check_x_p1.value = True
-                        self.page.update()
-                        time.sleep(0.1)
-                        self.check_o_p1.value = False
-                        self.check_x_p1.value = False
-                        self.page.update()
-                        time.sleep(0.1)
-
-                    self.check_o_p1.value = False
-                    self.check_x_p1.value = False
-                    self.page.update()
+                self.check_o_p1.value = False
+                self.check_x_p1.value = False
+                self.page.update()
 
         elif self.edit_name == 2 and self.input_name_p2.value:
-            print("-- edit = 2 y tiene valor en el input")
 
             if self.check_x_p2.value and self.check_o_p2.value:
 
-                for l in range(2):
-                    print("bucle")
+                for l in range(1, 3):
                     self.check_o_p2.value = False
                     self.check_x_p2.value = False
                     self.page.update()
@@ -513,17 +558,34 @@ class Gui_app:
                 self.page.update()
 
             elif self.check_x_p2.value or self.check_o_p2.value:
-                print("-- cerrando")
+
                 self.text_player_2.value = self.input_name_p2.value.capitalize()
                 self.dialog_names_p2.open = False
+
+                self.player_2.set_name(self.input_name_p1.value)
+                self.player_2.set_shitf(True)
+
+                if self.check_x_p2.value and not self.check_o_p2.value:
+                    self.check_x_p1.disabled = True
+                    self.check_o_p1.value = True
+                    self.check_o_p1.disabled = True
+                    self.player_2.set_figure("x")
+                elif self.check_o_p2.value and not self.check_x_p2.value:
+                    self.check_o_p1.disabled = True
+                    self.check_x_p1.value = True
+                    self.check_x_p1.disabled = True
+                    self.player_2.set_figure("o")
+
+                self.player_2.get_info_player("PLAYER 2")
+                
                 self.dialog_names_p2.content = []
-                self.dialog_names_p2.actions = []
+                self.dialog_names_p2.actions = ()
                 self.page.update()
 
             elif not self.check_x_p2.value and not self.check_o_p2.value:
 
                     for j in range(1, 5):
-                        print("-- en el bulce")
+
                         self.check_o_p2.value = True
                         self.check_x_p2.value = True
                         self.page.update()
@@ -535,9 +597,9 @@ class Gui_app:
 
         else:
             if not self.input_name_p1.value and self.edit_name == 1:
-                print("input 1 no tiene texto y es igual a ", self.edit_name)
+
                 for i in range(1, 7):
-                    print("-- en el bulce de 1 ")
+
                     self.input_name_p1.border_color = flet.colors.ERROR
                     self.page.update()
                     time.sleep(0.1)
@@ -546,9 +608,8 @@ class Gui_app:
                     time.sleep(0.1)
                 self.page.update()
             elif not self.input_name_p2.value and self.edit_name == 2:
-                print("input 2 no tiene texto y es igual a ", self.edit_name)
+
                 for j in range(1, 7):
-                    print("-- en el bulce de 2 ")
                     self.input_name_p2.border_color = flet.colors.ERROR
                     self.page.update()
                     time.sleep(0.1)
