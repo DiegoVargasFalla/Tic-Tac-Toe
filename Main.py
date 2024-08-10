@@ -6,19 +6,13 @@ from flet import (
     Text,
     IconButton,
     Icon,
-    Image,
-    ImageFit,
     Column,
     Row,
-    Alignment,
-    LinearGradient,
     BoxShadow,
     FontWeight,
     AlertDialog,
     TextField,
-    ElevatedButton,
     Checkbox,
-    TextButton,
     Audio
 )
 
@@ -47,7 +41,7 @@ class Player:
         return self.game_won
     
     def set_game_won(self, num):
-        self.game_won = num
+        self.game_won += num
 
     def get_figure(self):
         return self.figure
@@ -71,6 +65,7 @@ class Gui_app:
         self.click_start = False
         self.triki_player1 = False
         self.triki_player2 = False
+        self.count_games_num = 0
 
         self.player_1 = Player()
         self.player_2 = Player()
@@ -91,6 +86,7 @@ class Gui_app:
         # self.page.update()
 
         self.edit_name = 0
+
         self.games_num = Text(
             "0",
             weight=FontWeight.W_500,
@@ -161,10 +157,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=1,
+            data=[1, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -183,12 +180,13 @@ class Gui_app:
         self.container_2 = Container(
             margin=flet.margin.only(top=0, bottom=-4, right=-4),
             bgcolor="red",
+            image_src="",
             image_fit="FILL",
             width=100,
             height=100,
             border_radius=10,
             ink=True,
-            data=2,
+            data=[2, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -209,10 +207,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=3,
+            data=[3, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -234,10 +233,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=4,
+            data=[4, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -258,10 +258,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=5,
+            data=[5, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -282,10 +283,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=6,
+            data=[6, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -306,10 +308,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=7,
+            data=[7, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -330,10 +333,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=8,
+            data=[8, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -354,10 +358,11 @@ class Gui_app:
             bgcolor="red",
             width=100,
             height=100,
+            image_src="",
             image_fit="FILL",
             border_radius=10,
             ink=True,
-            data=9,
+            data=[9, False],
             on_click=lambda e: self.play(e.control.data),
             gradient=flet.LinearGradient(
                 begin=flet.alignment.top_center,
@@ -407,6 +412,7 @@ class Gui_app:
             width=90,
             height=28,
             border_radius=10,
+            ink=True,
             on_click=self.check_star,
             content=Row(
                         spacing=5,
@@ -588,17 +594,6 @@ class Gui_app:
             self.container_4, self.container_5, self.container_6,
             self.container_7, self.container_8, self.container_9
         ]
-
-        self.auido_star = Audio(
-            src="assets/start_game.wav",
-            autoplay=True,
-            volume=1
-        )
-
-        self.auido_click_container = Audio(
-            src="assets/click_container.wav",
-            autoplay=True
-        )
         
 
     def change_color_names(self):
@@ -705,13 +700,22 @@ class Gui_app:
             self.check_x_p2.value = False
             self.check_o_p2.disabled = False
             self.check_o_p2.value = False
+            self.click_start = False
+
+            self.container_play.shadow = BoxShadow(
+                                                spread_radius=3,
+                                                blur_radius=8,
+                                                color="transparent",
+                                                offset=flet.Offset(0, 0),
+                                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                                            )
             self.page.update()
 
         elif self.num_clean_widgets == 2:
 
             self.figure_P2.value = ""
             self.figure_P1.value = ""
-            self.input_name_p1.value = ""
+            self.input_name_p2.value = ""
             self.check_x_p2.disabled = False
             self.check_x_p2.value = False
             self.check_o_p2.disabled = False
@@ -721,11 +725,21 @@ class Gui_app:
             self.check_x_p1.value = False
             self.check_o_p1.disabled = False
             self.check_o_p1.value = False
+            self.click_start = False
+
+            self.container_play.shadow = BoxShadow(
+                                                spread_radius=3,
+                                                blur_radius=8,
+                                                color="transparent",
+                                                offset=flet.Offset(0, 0),
+                                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                                            )
+            
             self.page.update()
 
     def open_dialog(self, e):
         if e == '1':
-            # print(f"num action -> {len(self.dialog_names_p1.actions)}")
+
             self.edit_name = 1
             self.num_clean_widgets = 1
 
@@ -789,8 +803,8 @@ class Gui_app:
 
         if self.input_name_p1.value and self.input_name_p2.value and self.input_num_game.value:
             self.container_play.shadow = BoxShadow(
-                                                spread_radius=7,
-                                                blur_radius=20,
+                                                spread_radius=3,
+                                                blur_radius=8,
                                                 color="#3ccd6e",
                                                 offset=flet.Offset(0, 0),
                                                 blur_style=flet.ShadowBlurStyle.NORMAL,
@@ -829,6 +843,8 @@ class Gui_app:
                     self.check_o_p2.value = True
                     self.player_1.set_figure("X")
                     self.figure_P1.value = self.player_1.get_figure()
+                    
+
                 elif self.check_o_p1.value and not self.check_x_p1.value:
                     self.check_o_p2.disabled = True
                     self.check_x_p2.value = True
@@ -888,7 +904,7 @@ class Gui_app:
                 self.text_player_2.value = self.input_name_p2.value.capitalize()
                 self.dialog_names_p2.open = False
 
-                self.player_2.set_name(self.input_name_p1.value)
+                self.player_2.set_name(self.input_name_p2.value)
                 # self.player_2.set_shitf(True)
 
                 if self.check_x_p2.value and not self.check_o_p2.value:
@@ -972,6 +988,279 @@ class Gui_app:
                     self.page.update()
                     time.sleep(0.1)
 
+    def clean_table(self):
+        time.sleep(1.5)
+
+        for i in self.list_containers:
+
+            if i.image_src and i.data[1]:
+                print(i.image_src)
+                i.image_src = ""
+                i.data[1] = False
+                time.sleep(0.090)
+                self.page.update()
+                print(i.image_src)
+        
+        self.triki_player1 = False
+        self.triki_player2 = False
+
+    def clean_table_and_widgets(self):
+        time.sleep(1.5)
+
+        for i in self.list_containers:
+
+            if i.image_src and i.data[1]:
+                print(i.image_src)
+                i.image_src = ""
+                i.data[1] = False
+                time.sleep(0.090)
+                self.page.update()
+                print(i.image_src)
+
+        print("limpiando")
+        self.games_count.value = "0"
+        self.games_num.value = "0"
+        self.playing = False
+        self.click_start = False
+        
+        self.text_player_1.value = "Player 1"
+        self.input_name_p1.value = ""
+        self.figure_P1.value = ""
+        self.games_won_P1.value = ""
+        self.check_o_p1.value = False
+        self.check_x_p1.value = False
+        self.input_num_game.value = ""
+        self.check_o_p1.disabled = False
+        self.check_x_p1.disabled = False
+        self.player_1.game_won = 0
+
+        self.text_player_2.value = "Player 2"
+        self.input_name_p2.value = ""
+        self.figure_P2.value = ""
+        self.games_won_P2.value = ""
+        self.check_o_p2.value = False
+        self.check_x_p2.value = False
+        self.check_o_p2.disabled = False
+        self.check_x_p2.disabled = False
+        self.player_2.game_won = 0
+
+        self.count_games_num = 0
+
+        self.triki_player1 = False
+        self.triki_player2 = False
+        self.page.update()
+            
+    def dialog_win(self, name):
+
+        audio_win = Audio(
+            src="assets/sound_win.wav",
+            autoplay=True
+        )
+        
+        dialog_win = AlertDialog(
+            modal=False,
+            bgcolor="transparent",
+            content=Container(
+                bgcolor="green",
+                # padding=20,
+                border_radius=30,
+                width=200,
+                height=200,
+                content=Column(
+                    spacing=-15,
+                    controls=[
+                        Row(
+                            controls=[
+                                Container(
+                                        border_radius=50,
+                                        margin=flet.margin.only(top=15),
+                                        bgcolor="transparent",
+                                        width=43,
+                                        content=Row(
+                                            controls=[
+                                                    Icon(
+                                                        name="STAR_ROUNDED", 
+                                                        size=40,
+                                                        color="#9ca51a"
+                                                        )
+                                                    ],
+                                                    alignment=flet.MainAxisAlignment.CENTER
+                                                ),
+                                            shadow=BoxShadow(
+                                                            spread_radius=0,
+                                                            blur_radius=13,
+                                                            color="#cfd519",
+                                                            offset=flet.Offset(0, 0),
+                                                            blur_style=flet.ShadowBlurStyle.NORMAL,
+                                                ),
+                                            ),
+                                            Container(
+                                                border_radius=50,
+                                                margin=flet.margin.only(top=-40),
+                                                bgcolor="transparent",
+                                                width=43,
+                                                content=Row(
+                                                controls=[
+                                                        Icon(
+                                                            name="STAR_ROUNDED", 
+                                                            size=40,
+                                                            color="#9ca51a"
+                                                            )
+                                                        ],
+                                                        alignment=flet.MainAxisAlignment.CENTER
+                                                    ),
+                                                shadow=BoxShadow(
+                                                                spread_radius=0,
+                                                                blur_radius=13,
+                                                                color="#cfd519",
+                                                                offset=flet.Offset(0, 0),
+                                                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                                                            ),
+                                            ),
+                                            Container(
+                                                border_radius=50,
+                                                margin=flet.margin.only(top=15),
+                                                bgcolor="transparent",
+                                                width=43,
+                                                content=Row(
+                                                controls=[
+                                                        Icon(
+                                                            name="STAR_ROUNDED", 
+                                                            size=40,
+                                                            color="#9ca51a"
+                                                            )
+                                                        ],
+                                                        alignment=flet.MainAxisAlignment.CENTER
+                                                    ),
+                                                shadow=BoxShadow(
+                                                                spread_radius=0,
+                                                                blur_radius=13,
+                                                                color="#cfd519",
+                                                                offset=flet.Offset(0, 0),
+                                                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                                                            ),
+                                            ),
+                                        ],
+                                        alignment=flet.MainAxisAlignment.SPACE_AROUND
+                                ),
+                        Row(
+                            controls=[
+                                Text(
+                                    f"WINNER",
+                                    weight=FontWeight.BOLD,
+                                    size=35,
+                                    ),
+                            ],
+                            alignment=flet.MainAxisAlignment.CENTER
+                        ),
+                        Row(
+                            controls=[
+                                Text(
+                                    f"{name}",
+                                    weight=FontWeight.BOLD,
+                                    size=35,
+                                    ),
+                            ],
+                            alignment=flet.MainAxisAlignment.CENTER
+                        )
+                    ],
+                    alignment=flet.MainAxisAlignment.CENTER
+                ),
+                gradient=flet.LinearGradient(
+                begin=flet.alignment.top_center,
+                end=flet.alignment.bottom_center,
+                colors=["#51b373", "#277c85", "#053c42"],
+            ),
+            shadow=BoxShadow(
+                spread_radius=3,
+                blur_radius=12,
+                color="#51b373",
+                offset=flet.Offset(0, 0),
+                blur_style=flet.ShadowBlurStyle.NORMAL,
+                ),
+            ),
+        )
+        self.page.overlay.append(dialog_win)
+        self.page.update()
+        dialog_win.open = True
+        self.page.overlay.append(audio_win)
+        self.page.update()
+        audio_win.play()
+        self.page.update()
+
+    def empate(self, name1, name2):
+
+        audio_win = Audio(
+            src="assets/sound_win.wav",
+            autoplay=True
+        )
+        
+        dialog_win = AlertDialog(
+                                modal=False,
+                                bgcolor="transparent",
+                                content=Container(
+                                    bgcolor="green",
+                                    # padding=20,
+                                    border_radius=30,
+                                    width=200,
+                                    height=200,
+                                    content=Column(
+                                        spacing=-15,
+                                        controls=[
+                                            Row(
+                                                controls=[
+                                                    Text(
+                                                        f"DRAW",
+                                                        weight=FontWeight.BOLD,
+                                                        size=35,
+                                                        color="white"
+                                                        ),
+                                                ],
+                                                alignment=flet.MainAxisAlignment.CENTER
+                                            ),
+                                            Row(
+                                                spacing=10,
+                                                controls=[
+                                                    Text(
+                                                        f"{name1} - ",
+                                                        weight=FontWeight.BOLD,
+                                                        size=35,
+                                                        ),
+                                                    Text(
+                                                        f"{name2}",
+                                                        weight=FontWeight.BOLD,
+                                                        size=35,
+                                                        ),
+                                                ],
+                                                alignment=flet.MainAxisAlignment.CENTER
+                                            )
+                                        ],
+                                        alignment=flet.MainAxisAlignment.CENTER
+                                    ),
+                                    gradient=flet.LinearGradient(
+                                    begin=flet.alignment.top_center,
+                                    end=flet.alignment.bottom_center,
+                                    colors=["#51b373", "#277c85", "#053c42"],
+                                ),
+                                shadow=BoxShadow(
+                                    spread_radius=3,
+                                    blur_radius=12,
+                                    color="#51b373",
+                                    offset=flet.Offset(0, 0),
+                                    blur_style=flet.ShadowBlurStyle.NORMAL,
+                                    ),
+                                ),
+                            )
+        self.page.overlay.append(dialog_win)
+        self.page.update()
+        dialog_win.open = True
+        self.page.update()
+        self.page.overlay.append(audio_win)
+        self.page.update()
+        audio_win.play()
+        self.page.update()
+
+
     def triki(self, num1, num2, num3, image):
         print(type(num1), type(num2), type(num3), type(image))
         self.list_containers[int(num1)].image_src = image
@@ -979,39 +1268,140 @@ class Gui_app:
         self.list_containers[int(num3)].image_src = image
         self.page.update()
 
-    def player_win(self):
-        pass
+        self.count_games_num += 1
+        self.games_count.value = self.count_games_num
+        print("valor de la sumatoria: ", self.games_count.value)
 
+        if self.triki_player1:
+            print("triki para player 1")
+            # mostrar que a sido el ganador
+            self.player_1.set_game_won(1) 
+            print(f"juegos ganados de el jugador 1 {self.player_1.get_game_won()}")
+            self.games_won_P1.value = self.player_1.get_game_won()
+            self.page.update()
+
+            if self.count_games_num == int(self.games_num.value)  and self.player_1.get_game_won() > self.player_2.get_game_won():
+                self.dialog_win(self.text_player_1.value)
+                self.clean_table_and_widgets()
+            elif self.count_games_num == int(self.games_num.value) and self.player_2.get_game_won() == self.player_1.get_game_won():
+                self.empate(self.player_1.get_name(), self.player_2.get_name())
+                self.clean_table_and_widgets()
+            elif self.count_games_num == int(self.games_num.value)  and self.player_1.get_game_won() < self.player_2.get_game_won():
+                self.dialog_win(self.text_player_2.value)
+                self.clean_table_and_widgets()
+            elif self.count_games_num < int(self.games_num.value):
+                self.clean_table()
+            else:
+                print("-- ocurrio otra cosa en triki 1")
+
+        elif self.triki_player2:
+            print("triki para player 2")
+            # mostrar ganador jugador 2
+            self.player_2.set_game_won(1)
+
+            print(f"juegos ganados de el jugador 2 {self.player_2.get_game_won()}")
+            self.games_won_P2.value = self.player_2.get_game_won()
+            self.page.update()
+
+            if self.count_games_num == int(self.games_num.value) and self.player_2.get_game_won() > self.player_1.get_game_won():
+                print("-- gano 2")
+                self.dialog_win(self.text_player_2.value)
+                self.clean_table_and_widgets()
+            elif self.count_games_num == int(self.games_num.value) and self.player_2.get_game_won() == self.player_1.get_game_won():
+                print("-- empate ", self.player_2.get_game_won(), self.player_1.get_game_won())
+                self.empate(self.player_1.get_name(), self.player_2.get_name())
+                self.clean_table_and_widgets()
+            elif self.count_games_num == int(self.games_num.value)  and self.player_1.get_game_won() > self.player_2.get_game_won():
+                self.dialog_win(self.text_player_1.value)
+                self.clean_table_and_widgets()
+            elif self.count_games_num < int(self.games_num.value):
+                self.clean_table()
+            else:
+                print("-- ocurrio otra cosa en trik 2")
 
     def play(self, e):
 
-        if self.text_player_1.value != "Player 1" and self.text_player_2.value != "Player 2" and self.click_start:
+        auido_click_container = Audio(
+            src="assets/click_container.wav",
+            autoplay=True
+        )
+
+        audio_error = Audio(
+            src="assets/error_start.wav",
+            autoplay=True
+        )
+
+        if self.text_player_1.value != "Player 1" and self.text_player_2.value != "Player 2" and self.click_start and not e[1]:
             print("-- puede iniciar e juego")
             # print(f"-- Turno player 1 {self.player_1.get_shift()}")
             if self.player_1.get_shift() and not self.player_2.get_shift():
                 print(f"turno de player 1: {self.player_1.get_shift()}")
                 print(f"figura: {self.player_1.get_figure()}")
                 for i in self.list_containers:
-                    if i.data == e and i.image_src == None and self.player_1.get_figure() == "X":
+                    print(f"-- datos de los containers: {e}, {e[0]}, {e[1]}")
+                    print(f"imagen: {i.image_src}")
+                    print(f"numeros: {i.data[0]} {e[0]}, {e[1]}")
+                    if i.data[0] == e[0] and not i.image_src and self.player_1.get_figure() == "X":
                         print(f"data de i: {i.data}, {e} - src {i.image_src}")
                         i.image_src = "X_img.png"
                         # self.page.update()
-                        self.page.overlay.append(self.auido_click_container)
+                        self.page.overlay.append(auido_click_container)
                         self.page.update()
-                        self.auido_click_container.play()
+                        auido_click_container.play()
+                        i.data[1] = True
+                        print(f"data: {i.data}")
                         self.page.update()
                         print(f"src: {i.image_src}")
-                    elif i.data == e and i.image_src == None and self.player_1.get_figure() == "O":
+
+                        self.container_player_2.shadow = BoxShadow(
+                            spread_radius=7,
+                            blur_radius=20,
+                            color="#3bcc4f",
+                            offset=flet.Offset(0, 0),
+                            blur_style=flet.ShadowBlurStyle.NORMAL,
+                        )
+                        self.container_player_1.shadow = BoxShadow(
+                                spread_radius=7,
+                                blur_radius=20,
+                                color="",
+                                offset=flet.Offset(0, 0),
+                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                            )
+                        self.page.update()
+
+                        self.player_1.set_shitf(False)
+                        self.player_2.set_shitf(True)
+
+                    elif i.data[0] == e[0] and not i.image_src and self.player_1.get_figure() == "O":
                         print(f"data de i: {i.data}, {e} - src {i.image_src}")
                         i.image_src = "O_img.png"
                         # self.page.update()
-                        self.page.overlay.append(self.auido_click_container)
+                        self.page.overlay.append(auido_click_container)
                         self.page.update()
-                        self.auido_click_container.play()
+                        auido_click_container.play()
+                        i.data[1] = True
+                        print(f"data: {i.data}")
                         self.page.update()
                         print(f"src: {i.image_src}")
-                self.player_1.set_shitf(False)
-                self.player_2.set_shitf(True)
+
+                        self.container_player_2.shadow = BoxShadow(
+                            spread_radius=7,
+                            blur_radius=20,
+                            color="#3bcc4f",
+                            offset=flet.Offset(0, 0),
+                            blur_style=flet.ShadowBlurStyle.NORMAL,
+                        )
+                        self.container_player_1.shadow = BoxShadow(
+                                spread_radius=7,
+                                blur_radius=20,
+                                color="",
+                                offset=flet.Offset(0, 0),
+                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                            )
+                        self.page.update()
+
+                        self.player_1.set_shitf(False)
+                        self.player_2.set_shitf(True)
 
                 print(f"turno de 1 {self.player_1.get_shift()}")
                 print(f"turno de 2 {self.player_2.get_shift()}")
@@ -1020,128 +1410,325 @@ class Gui_app:
 
                 print(f"turno de player 2: {self.player_2.get_shift()}")
                 for j in self.list_containers:
-                    if j.data == e and j.image_src == None and self.player_2.get_figure() == "X":
+                    print(f"imagen: {j.image_src}")
+                    print(f"numeros: {j.data[0]} {e[0]}")
+                    if j.data[0] == e[0] and not j.image_src and self.player_2.get_figure() == "X":
                         print(f"data de i: {j.data}, {e} - src {j.image_src}")
                         j.image_src = "X_img.png"
                         # self.page.update()
-                        self.page.overlay.append(self.auido_click_container)
+                        self.page.overlay.append(auido_click_container)
                         self.page.update()
-                        self.auido_click_container.play()
+                        auido_click_container.play()
+                        j.data[1] = True
+                        print(f"data: {j.data}")
                         self.page.update()
-                    elif j.data == e and j.image_src == None and self.player_2.get_figure() == "O":
+
+                        self.container_player_1.shadow = BoxShadow(
+                            spread_radius=7,
+                            blur_radius=20,
+                            color="#3bcc4f",
+                            offset=flet.Offset(0, 0),
+                            blur_style=flet.ShadowBlurStyle.NORMAL,
+                        )
+                        self.container_player_2.shadow = BoxShadow(
+                                spread_radius=7,
+                                blur_radius=20,
+                                color="",
+                                offset=flet.Offset(0, 0),
+                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                            )
+                        self.page.update()
+
+                        self.player_1.set_shitf(True)
+                        self.player_2.set_shitf(False)
+
+                    elif j.data[0] == e[0] and not j.image_src and self.player_2.get_figure() == "O":
                         print(f"data de i: {j.data}, {e} - src {j.image_src}")
                         j.image_src = "O_img.png"
                         # self.page.update()
-                        self.page.overlay.append(self.auido_click_container)
+                        self.page.overlay.append(auido_click_container)
                         self.page.update()
-                        self.auido_click_container.play()
+                        auido_click_container.play()
+                        j.data[1] = True
+                        print(f"data: {j.data}")
                         self.page.update()
-                self.player_1.set_shitf(True)
-                self.player_2.set_shitf(False)
 
-        # change img of X
+                        self.container_player_1.shadow = BoxShadow(
+                            spread_radius=7,
+                            blur_radius=20,
+                            color="#3bcc4f",
+                            offset=flet.Offset(0, 0),
+                            blur_style=flet.ShadowBlurStyle.NORMAL,
+                        )
+                        self.container_player_2.shadow = BoxShadow(
+                                spread_radius=7,
+                                blur_radius=20,
+                                color="",
+                                offset=flet.Offset(0, 0),
+                                blur_style=flet.ShadowBlurStyle.NORMAL,
+                            )
+                        self.page.update()
+                        self.player_1.set_shitf(True)
+                        self.player_2.set_shitf(False)
+
+
+        else:
+            self.page.overlay.append(audio_error)
+            self.page.update()
+            audio_error.play()
+            self.page.update()
+
+        # player 1 con la x
         
-        if self.list_containers[0].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png":
+        if self.list_containers[0].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_1.get_figure() == "X":
 
+            print("triki 1")
+            self.triki_player1 = True
             self.triki(0, 4, 8, "x_left_img.png")
+            
+
+        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[3].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png" and self.player_1.get_figure() == "X":
+
+            print("triki 2")
             self.triki_player1 = True
-
-        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[3].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png":
-
             self.triki(0, 3, 6, "x_center_img.png")
-            self.triki_player1 = True
         
-        elif self.list_containers[1].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png":
+        elif self.list_containers[1].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png" and self.player_1.get_figure() == "X":
 
+            print("triki 3")
+            self.triki_player1 = True
             self.triki(1, 4, 7, "x_center_img.png")
-            self.triki_player1 = True
         
-        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png":
+        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_1.get_figure() == "X":
 
+            print("triki 3")
+            self.triki_player1 = True
             self.triki(2, 5, 8, "x_center_img.png")
+
+        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png" and self.player_1.get_figure() == "X":
+
+            print("triki4")
             self.triki_player1 = True
-
-        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png":
-
             self.triki(2, 4, 6, "x_right_img.png")
+
+        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[1].image_src == "X_img.png" and self.list_containers[2].image_src == "X_img.png" and self.player_1.get_figure() == "X":
+
+            print("triki 5")
             self.triki_player1 = True
-
-        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[1].image_src == "X_img.png" and self.list_containers[2].image_src == "X_img.png":
-
             self.triki(0, 1, 2, "x_hor_img.png")
+
+        elif self.list_containers[3].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png" and self.player_1.get_figure() == "X":
+
+            print("triki 6")
             self.triki_player1 = True
-
-        elif self.list_containers[3].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png":
-
             self.triki(3, 4, 5, "x_hor_img.png")
+
+        elif self.list_containers[6].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_1.get_figure() == "X":
+
+            print("triki 7")
             self.triki_player1 = True
-
-        elif self.list_containers[6].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png":
-
             self.triki(6, 7, 8, "x_hor_img.png")
+        
+        # player 1 con la o
+
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_1.get_figure() == "O":
+
+            print("triki 1")
             self.triki_player1 = True
-
-        # change img of O
-        
-        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png":
-
             self.triki(0, 4, 8, "o_left_img.png")
-            self.triki_player2 = True
+            
 
-        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[3].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png":
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[3].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 2")
+            self.triki_player1 = True
             self.triki(0, 3, 6, "o_center_img.png")
-            self.triki_player2 = True
         
-        elif self.list_containers[1].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png":
+        elif self.list_containers[1].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 3")
+            self.triki_player1 = True
             self.triki(1, 4, 7, "o_center_img.png")
-            self.triki_player2 = True
         
-        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png":
+        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 3")
+            self.triki_player1 = True
             self.triki(2, 5, 8, "o_center_img.png")
-            self.triki_player2 = True
 
-        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png":
+        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki4")
+            self.triki_player1 = True
             self.triki(2, 4, 6, "o_right_img.png")
-            self.triki_player2 = True
 
-        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[1].image_src == "O_img.png" and self.list_containers[2].image_src == "O_img.png":
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[1].image_src == "O_img.png" and self.list_containers[2].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 5")
+            self.triki_player1 = True
             self.triki(0, 1, 2, "o_hor_img.png")
-            self.triki_player2 = True
 
-        elif self.list_containers[3].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png":
+        elif self.list_containers[3].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 6")
+            self.triki_player1 = True
             self.triki(3, 4, 5, "o_hor_img.png")
-            self.triki_player2 = True
 
-        elif self.list_containers[6].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png":
+        elif self.list_containers[6].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
+            print("triki 7")
+            self.triki_player1 = True
             self.triki(6, 7, 8, "o_hor_img.png")
+
+        # player 2 con la o
+        
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
             self.triki_player2 = True
+            self.triki(0, 4, 8, "o_left_img.png")
+
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[3].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(0, 3, 6, "o_center_img.png")
+        
+        elif self.list_containers[1].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(1, 4, 7, "o_center_img.png")
+        
+        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(2, 5, 8, "o_center_img.png")
+
+        elif self.list_containers[2].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(2, 4, 6, "o_right_img.png")
+
+        elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[1].image_src == "O_img.png" and self.list_containers[2].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(0, 1, 2, "o_hor_img.png")
+
+        elif self.list_containers[3].image_src == "O_img.png" and self.list_containers[4].image_src == "O_img.png" and self.list_containers[5].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(3, 4, 5, "o_hor_img.png")
+
+        elif self.list_containers[6].image_src == "O_img.png" and self.list_containers[7].image_src == "O_img.png" and self.list_containers[8].image_src == "O_img.png" and self.player_2.get_figure() == "O":
+
+            self.triki_player2 = True
+            self.triki(6, 7, 8, "o_hor_img.png")
+
+        # player 2 con la x 
+
+        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(0, 4, 8, "x_left_img.png")
+
+        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[3].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(0, 3, 6, "x_center_img.png")
+        
+        elif self.list_containers[1].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(1, 4, 7, "x_center_img.png")
+        
+        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(2, 5, 8, "x_center_img.png")
+
+        elif self.list_containers[2].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(2, 4, 6, "x_right_img.png")
+
+        elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[1].image_src == "X_img.png" and self.list_containers[2].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(0, 1, 2, "x_hor_img.png")
+
+        elif self.list_containers[3].image_src == "X_img.png" and self.list_containers[4].image_src == "X_img.png" and self.list_containers[5].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(3, 4, 5, "x_hor_img.png")
+
+        elif self.list_containers[6].image_src == "X_img.png" and self.list_containers[7].image_src == "X_img.png" and self.list_containers[8].image_src == "X_img.png" and self.player_2.get_figure() == "X":
+
+            self.triki_player2 = True
+            self.triki(6, 7, 8, "x_hor_img.png")
+        else:
+            no_win = False
+            contador = 0
+            for n in self.list_containers:
+                if n.image_src:
+                    contador += 1
+                    print("-- tiene imagen, y no hay triki")
+            
+            if contador == 9:
+                print("-- limpiando")
+                self.clean_table()
     
 
     def check_star(self, e):
-        self.click_start = True
 
         audio_error = Audio(
             src="assets/error_start.wav",
             autoplay=True
         )
 
-        if self.playing:
+        audio_start = Audio(
+            src="assets/start_game.wav",
+            autoplay=True
+        )
 
-            self.page.overlay.append(self.auido_star)
+        print(self.figure_P1.value, self.figure_P2.value)
+        if self.playing and self.figure_P1.value and self.figure_P2.value:
+
+            for i in self.list_containers:
+
+                if i.image_src and i.data[1]:
+                    print(i.image_src)
+                    i.image_src = ""
+                    i.data[1] = False
+                    time.sleep(0.090)
+                    self.page.update()
+                    print(i.image_src)
+        
+            self.triki_player1 = False
+            self.triki_player2 = False
+
+            self.click_start = True
+            self.page.overlay.append(audio_start)
             self.page.update()
             print("-- Reproduciendo")
-            self.auido_star.play()
+            audio_start.play()
             print("-- saliendo de reproduccion")
             self.page.update()
             self.playing = False
-        elif not self.playing:
+
+            self.container_player_1.shadow = BoxShadow(
+                    spread_radius=7,
+                    blur_radius=20,
+                    color="#3bcc4f",
+                    offset=flet.Offset(0, 0),
+                    blur_style=flet.ShadowBlurStyle.NORMAL,
+                )
+            self.container_player_2.shadow = BoxShadow(
+                    spread_radius=7,
+                    blur_radius=20,
+                    color="",
+                    offset=flet.Offset(0, 0),
+                    blur_style=flet.ShadowBlurStyle.NORMAL,
+                )
+            self.page.update()
+        elif not self.playing or self.figure_P1.value == "" or self.figure_P2.value == "":
             self.page.overlay.append(audio_error)
             self.page.update()
             audio_error.play()
@@ -1153,10 +1740,10 @@ class Gui_app:
         self.page.update()
 
     def start(self):
-
         self.page.add(self.firstContainer)
         self.change_color_names()
         self.page.update()
+        
 
 
 def inicio(page):
