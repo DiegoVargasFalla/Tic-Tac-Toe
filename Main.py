@@ -1,5 +1,6 @@
 import flet
 import time
+import pygame
 
 from flet import (
     Container,
@@ -69,6 +70,15 @@ class Gui_app:
     def __init__(self, page):
 
         self.page = page
+
+        pygame.init()
+        pygame.mixer.init()
+
+        self.sound_win = pygame.mixer.Sound("assets/sound_win.wav")
+        self.audio_error = pygame.mixer.Sound("assets/error_start.wav")
+        self.audio_start_game = pygame.mixer.Sound("assets/start_game.wav")
+        self.sound_triki = pygame.mixer.Sound("assets/sound_triki.wav")
+        self.audio_click_container = pygame.mixer.Sound("assets/click_container.wav")
 
         # variable para cuando el jugador quiera cambiar los valores de los nombres saber que conteneddor se esta editando 
         self.num_clean_widgets = 0
@@ -1111,11 +1121,6 @@ class Gui_app:
 
     # ventana emergente cuando se acaba el juego y muestra el nombre del jugador
     def dialog_win(self, name):
-
-        audio_win = Audio(
-            src="assets/sound_win.wav",
-            autoplay=True
-        )
         
         dialog_win = AlertDialog(
             modal=False,
@@ -1243,18 +1248,10 @@ class Gui_app:
         self.page.overlay.append(dialog_win)
         self.page.update()
         dialog_win.open = True
-        self.page.overlay.append(audio_win)
-        self.page.update()
-        audio_win.play()
-        self.page.update()
+        self.sound_win.play()
 
     # ventana emergente si quedaron empate los jugadores
     def empate(self, name1, name2):
-
-        audio_win = Audio(
-            src="assets/sound_win.wav",
-            autoplay=True
-        )
         
         dialog_win = AlertDialog(
                                 modal=False,
@@ -1316,22 +1313,13 @@ class Gui_app:
         self.page.update()
         dialog_win.open = True
         self.page.update()
-        self.page.overlay.append(audio_win)
-        self.page.update()
-        audio_win.play()
-        self.page.update()
+        self.sound_win.play()
 
     # metodo cuando hay un ganador de una partida, esta funcion muestra la linea que se cruza cuando hay un tic tac toe
     def triki(self, num1, num2, num3, image):
 
-        audio_triki = Audio(
-            src="assets/sound_triki.wav",
-            autoplay=True
-        )
 
-        self.page.overlay.append(audio_triki)
-        self.page.update()
-        audio_triki.play()
+        self.sound_triki.play()
 
 
         self.list_containers[int(num1)].image_src = image
@@ -1392,16 +1380,6 @@ class Gui_app:
     # este metodo es la que cambia la figura de un contenedor cuando se le da click
     def play(self, e):
 
-        auido_click_container = Audio(
-            src="assets/click_container.wav",
-            autoplay=True
-        )
-
-        audio_error = Audio(
-            src="assets/error_start.wav",
-            autoplay=True
-        )
-
         if self.text_player_1.value != "Player 1" and self.text_player_2.value != "Player 2" and self.click_start and not e[1]:
 
             if self.player_1.get_shift() and not self.player_2.get_shift():
@@ -1411,9 +1389,7 @@ class Gui_app:
                     if i.data[0] == e[0] and not i.image_src and self.player_1.get_figure() == "X":
 
                         i.image_src = "X_img.png"
-                        self.page.overlay.append(auido_click_container)
-                        self.page.update()
-                        auido_click_container.play()
+                        self.audio_click_container.play()
                         i.data[1] = True
                         self.page.update()
 
@@ -1438,10 +1414,7 @@ class Gui_app:
 
                     elif i.data[0] == e[0] and not i.image_src and self.player_1.get_figure() == "O":
                         i.image_src = "O_img.png"
-                        # self.page.update()
-                        self.page.overlay.append(auido_click_container)
-                        self.page.update()
-                        auido_click_container.play()
+                        self.audio_click_container.play()
                         i.data[1] = True
                         self.page.update()
 
@@ -1471,10 +1444,7 @@ class Gui_app:
                     if j.data[0] == e[0] and not j.image_src and self.player_2.get_figure() == "X":
 
                         j.image_src = "X_img.png"
-                        # self.page.update()
-                        self.page.overlay.append(auido_click_container)
-                        self.page.update()
-                        auido_click_container.play()
+                        self.audio_click_container.play()
                         j.data[1] = True
 
                         self.page.update()
@@ -1501,10 +1471,7 @@ class Gui_app:
                     elif j.data[0] == e[0] and not j.image_src and self.player_2.get_figure() == "O":
     
                         j.image_src = "O_img.png"
-                        # self.page.update()
-                        self.page.overlay.append(auido_click_container)
-                        self.page.update()
-                        auido_click_container.play()
+                        self.audio_click_container.play()
                         j.data[1] = True
                         self.page.update()
 
@@ -1528,10 +1495,8 @@ class Gui_app:
 
 
         else:
-            self.page.overlay.append(audio_error)
-            self.page.update()
-            audio_error.play()
-            self.page.update()
+            # reproducir audio de error
+            self.audio_error.play()
 
         # de aqui hasta el ultimo conticional, son las verificaciones si hay tic tac toe
         
@@ -1714,16 +1679,6 @@ class Gui_app:
     # funcion para iniciar el juego
     def check_star(self, e):
 
-        audio_error = Audio(
-            src="assets/error_start.wav",
-            autoplay=True
-        )
-
-        audio_start = Audio(
-            src="assets/start_game.wav",
-            autoplay=True
-        )
-
         if self.playing and self.figure_P1.value and self.figure_P2.value:
 
             for i in self.list_containers:
@@ -1738,10 +1693,7 @@ class Gui_app:
             self.triki_player2 = False
 
             self.click_start = True
-            self.page.overlay.append(audio_start)
-            self.page.update()
-            audio_start.play()
-            self.page.update()
+            self.audio_start_game.play()
             self.playing = False
 
             self.container_player_1.shadow = BoxShadow(
@@ -1760,10 +1712,7 @@ class Gui_app:
                 )
             self.page.update()
         elif not self.playing or self.figure_P1.value == "" or self.figure_P2.value == "":
-            self.page.overlay.append(audio_error)
-            self.page.update()
-            audio_error.play()
-            self.page.update()
+            self.audio_error.play()
 
     # metodo para llamar la interfaz grafica
     def start(self):
