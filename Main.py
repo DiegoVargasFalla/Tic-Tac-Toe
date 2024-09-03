@@ -1,6 +1,8 @@
 import flet
 import time
 import pygame
+import os
+import sys
 
 from flet import (
     Container,
@@ -669,6 +671,12 @@ class Gui_app:
             self.container_4, self.container_5, self.container_6,
             self.container_7, self.container_8, self.container_9
         ]
+
+    @staticmethod
+    def resolver_ruta(ruta_relativa):
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, ruta_relativa)
+        return os.path.join(os.path.abspath('.'), ruta_relativa)
 
     # metodo para que los contenedores de los nombres sean intermitentes si no se ingresan los nombres
     def change_color_names(self):
