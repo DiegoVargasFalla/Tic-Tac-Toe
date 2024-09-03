@@ -76,11 +76,11 @@ class Gui_app:
         pygame.init()
         pygame.mixer.init()
 
-        self.sound_win = pygame.mixer.Sound(self.resolver_ruta("assets/sound_win.wav"))
-        self.audio_error = pygame.mixer.Sound(self.resolver_ruta("assets/error_start.wav"))
-        self.audio_start_game = pygame.mixer.Sound(self.resolver_ruta("assets/start_game.wav"))
-        self.sound_triki = pygame.mixer.Sound(self.resolver_ruta("assets/sound_triki.wav"))
-        self.audio_click_container = pygame.mixer.Sound(self.resolver_ruta("assets/click_container.wav"))
+        self.sound_win = pygame.mixer.Sound(self.resolver_ruta("assets\sound_win.wav"))
+        self.audio_error = pygame.mixer.Sound(self.resolver_ruta("assets\error_start.wav"))
+        self.audio_start_game = pygame.mixer.Sound(self.resolver_ruta("assets\start_game.wav"))
+        self.sound_triki = pygame.mixer.Sound(self.resolver_ruta("assets\sound_triki.wav"))
+        self.audio_click_container = pygame.mixer.Sound(self.resolver_ruta("assets\click_container.wav"))
 
         # variable para cuando el jugador quiera cambiar los valores de los nombres saber que conteneddor se esta editando 
         self.num_clean_widgets = 0
