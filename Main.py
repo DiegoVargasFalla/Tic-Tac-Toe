@@ -19,7 +19,9 @@ from flet import (
     Audio
 )
 
-#class for player 
+
+# class for player
+
 class Player:
 
     def __init__(self):
@@ -67,6 +69,7 @@ class Player:
 
     
 # clase para la interfaz grafica
+
 class Gui_app:
 
     def __init__(self, page):
@@ -82,7 +85,8 @@ class Gui_app:
         self.sound_triki = pygame.mixer.Sound(self.resolver_ruta("assets\sound_triki.wav"))
         self.audio_click_container = pygame.mixer.Sound(self.resolver_ruta("assets\click_container.wav"))
 
-        # variable para cuando el jugador quiera cambiar los valores de los nombres saber que conteneddor se esta editando 
+        # variable para cuando el jugador quiera cambiar los valores de los nombres saber
+        # que conteneddor se esta editando
         self.num_clean_widgets = 0
 
         # variable para que cuando se ingresen los nombres de los jugadores se pueda iniciar el juego con el boton start
@@ -279,7 +283,6 @@ class Gui_app:
                 blur_style=flet.ShadowBlurStyle.NORMAL,
             )
         )
-        
 
         self.container_4 = Container(
            margin=flet.margin.only(top=0, bottom=-4, right=-4),
@@ -642,7 +645,7 @@ class Gui_app:
             actions=[]
         )
 
-         # esta es la ventana emergente para ingresar la informacion del jugador 2
+        # esta es la ventana emergente para ingresar la informacion del jugador 2
         self.dialog_names_p2 = AlertDialog(
             modal=True,
             bgcolor="#a7c2ad",
@@ -1326,9 +1329,7 @@ class Gui_app:
     # metodo cuando hay un ganador de una partida, esta funcion muestra la linea que se cruza cuando hay un tic tac toe
     def triki(self, num1, num2, num3, image):
 
-
         self.sound_triki.play()
-
 
         self.list_containers[int(num1)].image_src = image
         self.page.update()
@@ -1350,13 +1351,13 @@ class Gui_app:
             self.games_won_P1.value = self.player_1.get_game_won()
             self.page.update()
 
-            if self.count_games_num == int(self.games_num.value)  and self.player_1.get_game_won() > self.player_2.get_game_won():
+            if self.count_games_num == int(self.games_num.value) and self.player_1.get_game_won() > self.player_2.get_game_won():
                 self.dialog_win(self.text_player_1.value)
                 self.clean_table_and_widgets()
             elif self.count_games_num == int(self.games_num.value) and self.player_2.get_game_won() == self.player_1.get_game_won():
                 self.empate(self.player_1.get_name(), self.player_2.get_name())
                 self.clean_table_and_widgets()
-            elif self.count_games_num == int(self.games_num.value)  and self.player_1.get_game_won() < self.player_2.get_game_won():
+            elif self.count_games_num == int(self.games_num.value) and self.player_1.get_game_won() < self.player_2.get_game_won():
                 self.dialog_win(self.text_player_2.value)
                 self.clean_table_and_widgets()
             elif self.count_games_num < int(self.games_num.value):
@@ -1501,7 +1502,6 @@ class Gui_app:
                         self.player_1.set_shitf(True)
                         self.player_2.set_shitf(False)
 
-
         else:
             # reproducir audio de error
             self.audio_error.play()
@@ -1512,7 +1512,6 @@ class Gui_app:
 
             self.triki_player1 = True
             self.triki(0, 4, 8, "x_left_img.png")
-            
 
         elif self.list_containers[0].image_src == "X_img.png" and self.list_containers[3].image_src == "X_img.png" and self.list_containers[6].image_src == "X_img.png" and self.player_1.get_figure() == "X":
 
@@ -1554,7 +1553,6 @@ class Gui_app:
 
             self.triki_player1 = True
             self.triki(0, 4, 8, "o_left_img.png")
-            
 
         elif self.list_containers[0].image_src == "O_img.png" and self.list_containers[3].image_src == "O_img.png" and self.list_containers[6].image_src == "O_img.png" and self.player_1.get_figure() == "O":
 
